@@ -1,65 +1,175 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useEffect, useState, useCallback } from 'react';
+import QuestionCard from '@/components/QuestionCard';
+
+const CATEGORIES = ['All', 'Sports', 'Politics', 'Crypto', 'Entertainment', 'Science', 'Technology', 'Finance', 'Other'];
+const STATUS_FILTERS = [
+  { label: 'All', value: '' },
+  { label: '🟢 Live', value: 'open' },
+  { label: '🔒 Closed', value: 'closed' },
+  { label: '✅ Resolved', value: 'resolved' },
+];
+const SORT_OPTIONS = [
+  { label: '🕐 Newest', value: 'newest' },
+  { label: '🔥 Popular', value: 'popular' },
+  { label: '⏰ Closing Soon', value: 'closing' },
+];
+
+export default function HomePage() {
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState('All');
+  const [status, setStatus] = useState('');
+  const [sort, setSort] = useState('newest');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [stats, setStats] = useState({ total: 0, live: 0, pool: 0 });
+
+  const fetchQuestions = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        ...(category !== 'All' ? { category } : {}),
+        ...(status ? { status } : {}),
+        sort,
+        page: page.toString(),
+      });
+      const res = await fetch(`/api/questions?${params}`);
+      const data = await res.json();
+      setQuestions(data.questions || []);
+      setTotalPages(data.pages || 1);
+
+      const liveCount = (data.questions || []).filter((q: any) => q.status === 'open').length;
+      const poolTotal = (data.questions || []).reduce(
+        (acc: number, q: any) => acc + q.totalYesAmount + q.totalNoAmount,
+        0
+      );
+      setStats({ total: data.total || 0, live: liveCount, pool: poolTotal });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [category, status, sort, page]);
+
+  useEffect(() => {
+    fetchQuestions();
+    const interval = setInterval(fetchQuestions, 15000); // auto-refresh every 15s
+    return () => clearInterval(interval);
+  }, [fetchQuestions]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [category, status, sort]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      {/* Hero */}
+      <div className="hero">
+        <div className="hero-badge">
+          <span>⚡</span> Live Prediction Markets
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <h1 className="hero-title">Bet on What<br />Happens Next</h1>
+        <p className="hero-subtitle">
+          Post questions, vote YES or NO, and win. Dynamic odds adjust in real-time
+          based on where the crowd puts their money.
+        </p>
+        <div className="hero-stats">
+          <div className="stat-item">
+            <div className="stat-value">{stats.total}</div>
+            <div className="stat-label">Markets</div>
+          </div>
+          <div className="stat-item" style={{ borderLeft: '1px solid var(--border)', paddingLeft: '2rem' }}>
+            <div className="stat-value" style={{ color: 'var(--yes-color)' }}>{stats.live}</div>
+            <div className="stat-label">Live Now</div>
+          </div>
+          <div className="stat-item" style={{ borderLeft: '1px solid var(--border)', paddingLeft: '2rem' }}>
+            <div className="stat-value" style={{ color: 'var(--gold)' }}>🪙{stats.pool.toFixed(0)}</div>
+            <div className="stat-label">Total Pool</div>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="filter-bar">
+        {/* Categories */}
+        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', flex: 1 }}>
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              id={`filter-cat-${cat}`}
+              className={`filter-chip ${category === cat ? 'active' : ''}`}
+              onClick={() => setCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div style={{ width: '1px', height: '24px', background: 'var(--border)' }} />
+
+        {/* Status */}
+        {STATUS_FILTERS.map((f) => (
+          <button
+            key={f.value}
+            id={`filter-status-${f.value || 'all'}`}
+            className={`filter-chip ${status === f.value ? 'active' : ''}`}
+            onClick={() => setStatus(f.value)}
+          >
+            {f.label}
+          </button>
+        ))}
+
+        {/* Sort */}
+        <select
+          id="sort-select"
+          className="form-input"
+          style={{ width: 'auto', padding: '0.3rem 2rem 0.3rem 0.75rem', fontSize: '0.82rem', borderRadius: '8px' }}
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+        >
+          {SORT_OPTIONS.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Questions Grid */}
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}>
+          <div className="spinner" style={{ width: 36, height: 36, borderWidth: 3 }} />
+        </div>
+      ) : questions.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">🎲</div>
+          <div className="empty-title">No markets yet</div>
+          <p>Be the first to post a prediction question!</p>
+        </div>
+      ) : (
+        <div className="questions-grid">
+          {questions.map((q) => (
+            <QuestionCard key={q._id} question={q} />
+          ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', padding: '2rem' }}>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <button
+              key={p}
+              id={`page-${p}`}
+              className={`btn btn-sm ${p === page ? 'btn-primary' : 'btn-ghost'}`}
+              onClick={() => setPage(p)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
