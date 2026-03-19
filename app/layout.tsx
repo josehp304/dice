@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/NavBar/Navbar';
 import ToastProvider from '@/components/ToastProvider';
 
 export const metadata: Metadata = {
@@ -14,8 +14,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <div className="glow-bg glow-purple" />
-        <div className="glow-bg glow-gold" />
         <AuthProvider>
           <ToastProvider>
             <Navbar />

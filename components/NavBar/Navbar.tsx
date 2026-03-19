@@ -21,7 +21,7 @@ export default function Navbar() {
     router.push('/');
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
@@ -33,15 +33,30 @@ export default function Navbar() {
             PREDICT.SYS
           </Link>
 
-          <button className="btn btn-ghost nav-toggle" onClick={toggleMenu}>
-            {isMenuOpen ? '[CLOSE]' : '[MENU]'}
+          <button
+            className={`nav-toggle ${isMenuOpen ? 'active' : ''}`}
+            onClick={toggleMenu}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span className="nav-toggle-bar" />
+            <span className="nav-toggle-bar" />
+            <span className="nav-toggle-bar" />
           </button>
 
-          <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+          <button
+            className={`nav-scrim ${isMenuOpen ? 'active' : ''}`}
+            onClick={closeMenu}
+            aria-hidden={!isMenuOpen}
+            tabIndex={-1}
+          />
+
+          <div className={`nav-links ${isMenuOpen ? 'active' : ''}`} id="mobile-menu">
             <Link href="/" className="nav-link" onClick={closeMenu}>Markets</Link>
             {user && <Link href="/my-bets" className="nav-link" onClick={closeMenu}>Terminals</Link>}
             {user && <Link href="/create" className="nav-link" onClick={closeMenu}>[+] Init</Link>}
-            
+
             <div className="nav-actions">
               {!loading && (
                 <>
@@ -54,16 +69,16 @@ export default function Navbar() {
                         USR:{user.username}
                       </span>
                       <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
-                        LOGOUT
+                        Logout
                       </button>
                     </>
                   ) : (
                     <>
                       <button className="btn btn-outline btn-sm" onClick={() => { setAuthModal('login'); closeMenu(); }}>
-                        LOGIN
+                        Login
                       </button>
                       <button className="btn btn-primary btn-sm" onClick={() => { setAuthModal('register'); closeMenu(); }}>
-                        REGISTER
+                        Register
                       </button>
                     </>
                   )}

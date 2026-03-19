@@ -68,72 +68,77 @@ export default function HomePage() {
       {/* Hero */}
       <div className="hero">
         <div className="hero-badge">
-          <span>⚡</span> Live Prediction Markets
+          [ ⚡ SYS.ONLINE ]
         </div>
-        <h1 className="hero-title">Bet on What<br />Happens Next</h1>
+        <h1 className="hero-title">Predict<br />The Future</h1>
         <p className="hero-subtitle">
-          Post questions, vote YES or NO, and win. Dynamic odds adjust in real-time
-          based on where the crowd puts their money.
+          POST MARKETS. VOTE /// YES /// OR /// NO ///. WIN TOKENS. DYNAMIC ODDS ALGORITHM POWERED BY COLLECTIVE INTELLIGENCE.
         </p>
         <div className="hero-stats">
           <div className="stat-item">
             <div className="stat-value">{stats.total}</div>
             <div className="stat-label">Markets</div>
           </div>
-          <div className="stat-item" style={{ borderLeft: '1px solid var(--border)', paddingLeft: '2rem' }}>
-            <div className="stat-value" style={{ color: 'var(--yes-color)' }}>{stats.live}</div>
-            <div className="stat-label">Live Now</div>
+          <div className="stat-item" style={{ borderLeft: '3px solid var(--border)', paddingLeft: '2rem' }}>
+            <div className="stat-value" style={{ color: 'var(--yes-color)', textShadow: '2px 2px 0px var(--yes-dark)' }}>{stats.live}</div>
+            <div className="stat-label">Live_Now</div>
           </div>
-          <div className="stat-item" style={{ borderLeft: '1px solid var(--border)', paddingLeft: '2rem' }}>
-            <div className="stat-value" style={{ color: 'var(--gold)' }}>🪙{stats.pool.toFixed(0)}</div>
-            <div className="stat-label">Total Pool</div>
+          <div className="stat-item" style={{ borderLeft: '3px solid var(--border)', paddingLeft: '2rem' }}>
+            <div className="stat-value" style={{ color: 'var(--gold)', textShadow: '2px 2px 0px rgba(255,230,0,0.4)' }}>{stats.pool.toFixed(0)}</div>
+            <div className="stat-label">Total_Volume</div>
           </div>
         </div>
       </div>
 
       {/* Filter Bar */}
       <div className="filter-bar">
-        {/* Categories */}
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', flex: 1 }}>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              id={`filter-cat-${cat}`}
-              className={`filter-chip ${category === cat ? 'active' : ''}`}
-              onClick={() => setCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Categories Dropdown */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
+          <label htmlFor="category-select" style={{ fontWeight: 700, opacity: 0.8 }}>Category</label>
+          <select
+            id="category-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="form-input"
+            style={{ width: '160px', minWidth: '120px', padding: '0.35rem 0.7rem', borderRadius: '8px' }}
+          >
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Divider */}
-        <div style={{ width: '1px', height: '24px', background: 'var(--border)' }} />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ width: '1px', height: '24px', background: 'var(--border)' }} />
+            {/* Status */}
+            {STATUS_FILTERS.map((f) => (
+              <button
+                key={f.value}
+                id={`filter-status-${f.value || 'all'}`}
+                className={`filter-chip ${status === f.value ? 'active' : ''}`}
+                onClick={() => setStatus(f.value)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
 
-        {/* Status */}
-        {STATUS_FILTERS.map((f) => (
-          <button
-            key={f.value}
-            id={`filter-status-${f.value || 'all'}`}
-            className={`filter-chip ${status === f.value ? 'active' : ''}`}
-            onClick={() => setStatus(f.value)}
+          {/* Sort */}
+          <select
+            id="sort-select"
+            className="form-input"
+            style={{ width: 'auto', padding: '0.3rem 2rem 0.3rem 0.75rem', fontSize: '0.82rem', borderRadius: '8px' }}
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
           >
-            {f.label}
-          </button>
-        ))}
-
-        {/* Sort */}
-        <select
-          id="sort-select"
-          className="form-input"
-          style={{ width: 'auto', padding: '0.3rem 2rem 0.3rem 0.75rem', fontSize: '0.82rem', borderRadius: '8px' }}
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-        >
-          {SORT_OPTIONS.map((s) => (
-            <option key={s.value} value={s.value}>{s.label}</option>
-          ))}
-        </select>
+            {SORT_OPTIONS.map((s) => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Questions Grid */}

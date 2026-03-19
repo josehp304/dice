@@ -23,14 +23,14 @@ interface QuestionCardProps {
 }
 
 const categoryEmoji: Record<string, string> = {
-  Sports: '⚽',
-  Politics: '🏛️',
-  Crypto: '₿',
-  Entertainment: '🎬',
-  Science: '🔬',
-  Technology: '💻',
-  Finance: '📈',
-  Other: '🎯',
+  Sports: '[S]',
+  Politics: '[P]',
+  Crypto: '[C]',
+  Entertainment: '[E]',
+  Science: '[SC]',
+  Technology: '[T]',
+  Finance: '[F]',
+  Other: '[X]',
 };
 
 export default function QuestionCard({ question }: QuestionCardProps) {
@@ -39,10 +39,10 @@ export default function QuestionCard({ question }: QuestionCardProps) {
   const isExpired = new Date(question.expiresAt) < new Date();
 
   const statusDisplay = question.status === 'resolved'
-    ? { label: question.outcome === 'yes' ? '✓ YES Won' : '✕ NO Won', cls: question.outcome === 'yes' ? 'badge-open' : 'badge-closed' }
+    ? { label: question.outcome === 'yes' ? '/// YES WON' : '/// NO WON', cls: question.outcome === 'yes' ? 'badge-open' : 'badge-closed' }
     : question.status === 'closed' || isExpired
-    ? { label: 'Closed', cls: 'badge-closed' }
-    : { label: 'Live', cls: 'badge-open' };
+    ? { label: 'HALTED', cls: 'badge-closed' }
+    : { label: 'ACTIVE', cls: 'badge-open' };
 
   return (
     <Link href={`/questions/${question._id}`} style={{ textDecoration: 'none' }}>
@@ -61,11 +61,11 @@ export default function QuestionCard({ question }: QuestionCardProps) {
           <OddsBar yesAmount={question.totalYesAmount} noAmount={question.totalNoAmount} />
 
           <div className="question-footer">
-            <span>👥 {totalBets} bets · 🪙 {totalPool.toFixed(0)} pool</span>
+            <span>VL: {totalPool.toFixed(0)} | USR: {totalBets}</span>
             <span>
               {isExpired || question.status !== 'open'
-                ? 'Expired'
-                : `Closes ${formatDistanceToNow(new Date(question.expiresAt), { addSuffix: true })}`}
+                ? 'T=0'
+                : `T-${formatDistanceToNow(new Date(question.expiresAt))}`}
             </span>
           </div>
         </div>

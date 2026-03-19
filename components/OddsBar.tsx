@@ -18,8 +18,8 @@ export default function OddsBar({ yesAmount, noAmount, showLabels = true }: Odds
     <div>
       {showLabels && (
         <div className="question-odds" style={{ marginBottom: '0.4rem' }}>
-          <span className="odds-yes">✓ YES {yesPercent.toFixed(0)}% · {yesOdds.toFixed(2)}x</span>
-          <span className="odds-no">{noOdds.toFixed(2)}x · {noPercent.toFixed(0)}% NO ✕</span>
+          <span className="odds-yes">YES // {yesPercent.toFixed(0)}% [{yesOdds.toFixed(2)}x]</span>
+          <span className="odds-no">[{noOdds.toFixed(2)}x] {noPercent.toFixed(0)}% // NO</span>
         </div>
       )}
       <div className="odds-bar">

@@ -9,8 +9,8 @@ import { formatDistanceToNow, format } from 'date-fns';
 import Link from 'next/link';
 
 const categoryEmoji: Record<string, string> = {
-  Sports: '⚽', Politics: '🏛️', Crypto: '₿', Entertainment: '🎬',
-  Science: '🔬', Technology: '💻', Finance: '📈', Other: '🎯',
+  Sports: '[S]', Politics: '[P]', Crypto: '[C]', Entertainment: '[E]',
+  Science: '[SC]', Technology: '[T]', Finance: '[F]', Other: '[X]',
 };
 
 const QUICK_AMOUNTS = [10, 25, 50, 100, 250, 500];
@@ -128,33 +128,33 @@ export default function QuestionDetailPage() {
     <div className="question-detail">
       {/* Back */}
       <Link href="/" className="btn btn-ghost btn-sm" style={{ marginBottom: '1rem', display: 'inline-flex' }}>
-        ← Back to Markets
+        [&lt;] BACK TO MARKETS
       </Link>
 
       {/* Header */}
       <div className="detail-header">
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
           <span className={`badge ${isOpen ? 'badge-open' : isResolved ? 'badge-resolved' : 'badge-closed'}`}>
-            {isOpen ? '🟢 Live' : isResolved ? '✅ Resolved' : '🔒 Closed'}
+            {isOpen ? '/// ACTIVE' : isResolved ? '/// RESOLVED' : '/// HALTED'}
           </span>
           <span className="badge badge-category">
             {categoryEmoji[question.category]} {question.category}
           </span>
           {isResolved && (
             <span className={question.outcome === 'yes' ? 'badge badge-open' : 'badge badge-closed'}>
-              {question.outcome === 'yes' ? '✓ YES Won' : '✕ NO Won'}
+              {question.outcome === 'yes' ? '/// YES WON' : '/// NO WON'}
             </span>
           )}
         </div>
-        <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.75rem', fontWeight: 700, lineHeight: 1.3, marginBottom: '0.75rem' }}>
+        <h1 style={{ fontFamily: 'var(--font-header)', fontSize: '2.5rem', fontWeight: 400, lineHeight: 1.1, marginBottom: '1rem', textTransform: 'uppercase' }}>
           {question.title}
         </h1>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '0.75rem' }}>
+        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '1rem', fontSize: '0.9rem' }}>
           {question.description}
         </p>
-        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-          <span>👤 Posted by @{question.creatorUsername}</span>
-          <span>⏰ {isOpen ? `Closes ${formatDistanceToNow(new Date(question.expiresAt), { addSuffix: true })}` : `Expired ${format(new Date(question.expiresAt), 'MMM d, yyyy')}`}</span>
+        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.82rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+          <span>USR: {question.creatorUsername}</span>
+          <span>{isOpen ? `T-${formatDistanceToNow(new Date(question.expiresAt))}` : `T=0 [${format(new Date(question.expiresAt), 'MMM d, yyyy')}]`}</span>
         </div>
       </div>
 
@@ -162,40 +162,40 @@ export default function QuestionDetailPage() {
       <div className="detail-card" style={{ marginBottom: '1rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>🪙{totalPool.toFixed(0)}</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Pool</div>
+            <div style={{ fontFamily: 'var(--font-header)', fontSize: '2rem', color: 'var(--text-primary)' }}>{totalPool.toFixed(0)}</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>VOLUME</div>
           </div>
-          <div style={{ textAlign: 'center', borderLeft: '1px solid var(--border)', borderRight: '1px solid var(--border)' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+          <div style={{ textAlign: 'center', borderLeft: '2px solid var(--border)', borderRight: '2px solid var(--border)' }}>
+            <div style={{ fontFamily: 'var(--font-header)', fontSize: '2rem', color: 'var(--text-primary)' }}>
               {question.totalYesBets + question.totalNoBets}
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Bets</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>TRANSACTIONS</div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--yes-color)' }}>{yesPercent.toFixed(0)}%</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Crowd picks YES</div>
+            <div style={{ fontFamily: 'var(--font-header)', fontSize: '2rem', color: 'var(--yes-color)', textShadow: '0 0 5px var(--yes-dark)' }}>{yesPercent.toFixed(0)}%</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PROBABILITY</div>
           </div>
         </div>
 
         <OddsBar yesAmount={question.totalYesAmount} noAmount={question.totalNoAmount} />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '1rem' }}>
-          <div style={{ background: 'rgba(16,217,118,0.07)', border: '1px solid rgba(16,217,118,0.15)', borderRadius: '10px', padding: '0.75rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--yes-color)' }}>
-              {getOddsForSide('yes').toFixed(2)}x
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '1.5rem' }}>
+          <div className={`bet-card-selector ${betSide === 'yes' ? 'selected' : ''}`} style={{ border: '2px solid var(--yes-color)', background: betSide === 'yes' ? 'var(--yes-color)' : 'var(--yes-bg)', color: betSide === 'yes' ? 'var(--bg-primary)' : 'inherit', padding: '1rem', textAlign: 'center', boxShadow: betSide === 'yes' ? '0px 0px 0px transparent' : '4px 4px 0px var(--yes-color)', transform: betSide === 'yes' ? 'translate(4px, 4px)' : 'none', cursor: 'pointer', transition: 'all 0.15s ease' }} onClick={() => setBetSide('yes')}>
+            <div style={{ fontFamily: 'var(--font-header)', fontSize: '2rem', color: betSide === 'yes' ? 'black' : 'var(--yes-color)', textShadow: betSide === 'yes' ? 'none' : '0 0 5px var(--yes-dark)' }}>
+              [{getOddsForSide('yes').toFixed(2)}x]
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>YES Multiplier</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--yes-color)', marginTop: '0.2rem' }}>
-              🪙{question.totalYesAmount.toFixed(0)} · {question.totalYesBets} bets
+            <div style={{ fontSize: '0.85rem', color: betSide === 'yes' ? 'black' : 'var(--text-primary)', fontWeight: 700 }}>YES MULTIPLIER</div>
+            <div style={{ fontSize: '0.75rem', color: betSide === 'yes' ? 'rgba(0,0,0,0.7)' : 'var(--yes-color)', marginTop: '0.5rem' }}>
+              VOL: {question.totalYesAmount.toFixed(0)} | TX: {question.totalYesBets}
             </div>
           </div>
-          <div style={{ background: 'rgba(255,77,109,0.07)', border: '1px solid rgba(255,77,109,0.15)', borderRadius: '10px', padding: '0.75rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--no-color)' }}>
-              {getOddsForSide('no').toFixed(2)}x
+          <div className={`bet-card-selector ${betSide === 'no' ? 'selected' : ''}`} style={{ border: '2px solid var(--no-color)', background: betSide === 'no' ? 'var(--no-color)' : 'var(--no-bg)', color: betSide === 'no' ? 'var(--bg-primary)' : 'inherit', padding: '1rem', textAlign: 'center', boxShadow: betSide === 'no' ? '0px 0px 0px transparent' : '4px 4px 0px var(--no-color)', transform: betSide === 'no' ? 'translate(4px, 4px)' : 'none', cursor: 'pointer', transition: 'all 0.15s ease' }} onClick={() => setBetSide('no')}>
+            <div style={{ fontFamily: 'var(--font-header)', fontSize: '2rem', color: betSide === 'no' ? 'black' : 'var(--no-color)', textShadow: betSide === 'no' ? 'none' : '0 0 5px var(--no-dark)' }}>
+              [{getOddsForSide('no').toFixed(2)}x]
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>NO Multiplier</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--no-color)', marginTop: '0.2rem' }}>
-              🪙{question.totalNoAmount.toFixed(0)} · {question.totalNoBets} bets
+            <div style={{ fontSize: '0.85rem', color: betSide === 'no' ? 'white' : 'var(--text-primary)', fontWeight: 700 }}>NO MULTIPLIER</div>
+            <div style={{ fontSize: '0.75rem', color: betSide === 'no' ? 'rgba(255,255,255,0.8)' : 'var(--no-color)', marginTop: '0.5rem' }}>
+              VOL: {question.totalNoAmount.toFixed(0)} | TX: {question.totalNoBets}
             </div>
           </div>
         </div>
@@ -210,27 +210,6 @@ export default function QuestionDetailPage() {
 
           {user ? (
             <>
-              <div className="bet-buttons">
-                <button
-                  id="bet-yes"
-                  className={`bet-side-btn bet-side-btn-yes ${betSide === 'yes' ? 'active' : ''}`}
-                  onClick={() => setBetSide('yes')}
-                >
-                  <span style={{ fontSize: '1.5rem' }}>✓</span>
-                  <span className="bet-side-label">YES</span>
-                  <span className="bet-side-odds">{getOddsForSide('yes').toFixed(2)}x return</span>
-                </button>
-                <button
-                  id="bet-no"
-                  className={`bet-side-btn bet-side-btn-no ${betSide === 'no' ? 'active' : ''}`}
-                  onClick={() => setBetSide('no')}
-                >
-                  <span style={{ fontSize: '1.5rem' }}>✕</span>
-                  <span className="bet-side-label">NO</span>
-                  <span className="bet-side-odds">{getOddsForSide('no').toFixed(2)}x return</span>
-                </button>
-              </div>
-
               {/* Quick amounts */}
               <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
                 {QUICK_AMOUNTS.map((amt) => (

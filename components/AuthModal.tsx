@@ -22,14 +22,14 @@ export default function AuthModal({ mode, onClose, onSwitch }: Props) {
     try {
       if (mode === 'login') {
         await login(form.email, form.password);
-        showToast('Welcome back! 🎲', 'success');
+        showToast('SESSION_AUTHORIZED', 'success');
       } else {
         await register(form.username, form.email, form.password);
-        showToast('Account created! You start with 1000 coins 🪙', 'success');
+        showToast('ACCOUNT_CREATED // BLD: 1000 CRD', 'success');
       }
       onClose();
     } catch (err: any) {
-      showToast(err.message || 'Something went wrong', 'error');
+      showToast(err.message || 'SYS_ERR', 'error');
     } finally {
       setLoading(false);
     }
@@ -42,18 +42,18 @@ export default function AuthModal({ mode, onClose, onSwitch }: Props) {
           onClick={onClose}
           style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem' }}
         >
-          ✕
+          [X]
         </button>
 
         <div style={{ marginBottom: '1.5rem' }}>
           <div className="nav-logo" style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
-            🎲 DiceBet
+            ▲ PREDICT.SYS
           </div>
-          <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.4rem', fontWeight: 700, textAlign: 'center' }}>
-            {mode === 'login' ? 'Welcome back' : 'Create account'}
+          <h2 style={{ fontFamily: 'var(--font-header)', fontSize: '2rem', fontWeight: 400, textAlign: 'center', color: 'var(--text-primary)' }}>
+            {mode === 'login' ? 'AUTH_REQUIRED' : 'INIT_USER'}
           </h2>
-          <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-            {mode === 'register' ? 'Start with 1,000 free coins!' : 'Login to place bets'}
+          <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.25rem', textTransform: 'uppercase' }}>
+            {mode === 'register' ? 'INITIALIZING NEW NODE WITH 1000 CRD' : 'ENTER CREDENTIALS'}
           </p>
         </div>
 
