@@ -130,8 +130,8 @@ export default function CreatePage() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div className="form-group">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem' }}>
+            <div className="form-group" style={{ flex: '1 1 200px', marginBottom: 0 }}>
               <label className="form-label">Category *</label>
               <select
                 id="question-category"
@@ -146,9 +146,9 @@ export default function CreatePage() {
               </select>
             </div>
 
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '1 1 200px', marginBottom: 0 }}>
               <label className="form-label">Closes At *</label>
-              <input
+             <input
                 id="question-expires"
                 type="datetime-local"
                 className="form-input"
@@ -156,7 +156,7 @@ export default function CreatePage() {
                 onChange={(e) => setForm({ ...form, expiresAt: e.target.value })}
                 min={minDateStr}
                 required
-              />
+              /> 
             </div>
           </div>
 
