@@ -13,7 +13,13 @@ export async function GET() {
     if (!user) return NextResponse.json({ user: null });
 
     return NextResponse.json({
-      user: { id: user._id, username: user.username, email: user.email, balance: user.balance },
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        email: user.email, 
+        balance: user.balance,
+        portfolio: user.portfolio 
+      },
     });
   } catch {
     return NextResponse.json({ user: null });

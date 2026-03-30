@@ -2,11 +2,18 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
+interface PortfolioItem {
+  symbol: string;
+  shares: number;
+  averagePrice: number;
+}
+
 interface User {
   id: string;
   username: string;
   email: string;
   balance: number;
+  portfolio: PortfolioItem[];
 }
 
 interface AuthContextType {

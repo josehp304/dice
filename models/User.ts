@@ -1,11 +1,18 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+export interface IPortfolioItem {
+  symbol: string;
+  shares: number;
+  averagePrice: number;
+}
+
 export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
   balance: number;
+  portfolio: IPortfolioItem[];
   avatar: string;
   createdAt: Date;
   comparePassword(password: string): Promise<boolean>;
@@ -17,6 +24,13 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, minlength: 6 },
     balance: { type: Number, default: 1000 },
+    portfolio: [
+      {
+        symbol: { type: String, required: true },
+        shares: { type: Number, required: true },
+        averagePrice: { type: Number, required: true },
+      },
+    ],
     avatar: { type: String, default: '' },
   },
   { timestamps: true }

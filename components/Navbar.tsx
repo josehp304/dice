@@ -39,6 +39,8 @@ export default function Navbar() {
 
           <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
             <Link href="/" className="nav-link" onClick={closeMenu}>Markets</Link>
+            <Link href="/invest" className="nav-link" onClick={closeMenu}>Invest</Link>
+            <Link href="/trade" className="nav-link" onClick={closeMenu}>Trade</Link>
             {user && <Link href="/my-bets" className="nav-link" onClick={closeMenu}>Terminals</Link>}
             {user && <Link href="/create" className="nav-link" onClick={closeMenu}>[+] Init</Link>}
             

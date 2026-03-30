@@ -21,7 +21,13 @@ export async function POST(req: NextRequest) {
     const token = signToken({ userId: user._id.toString(), username: user.username, email: user.email });
 
     const resp = NextResponse.json({
-      user: { id: user._id, username: user.username, email: user.email, balance: user.balance },
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        email: user.email, 
+        balance: user.balance,
+        portfolio: user.portfolio || []
+      },
     });
     resp.cookies.set('auth_token', token, {
       httpOnly: true,
